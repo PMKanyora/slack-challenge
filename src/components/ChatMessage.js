@@ -10,7 +10,7 @@ function ChatMessage() {
             <MessageContent>
                 <Name>
                     Peter Maich
-                    <span>20/12/2021 2:30:00 PM</span>
+                    <span>20/12/2021 2:30:00 AM</span>
                 </Name>
                 <Text>
                     This is the best Challenge  
