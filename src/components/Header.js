@@ -4,7 +4,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { CenterFocusStrong } from '@material-ui/icons';
 
-function Header() {
+function Header({ user }) {
     return (
         <div>
             <Container>
@@ -19,10 +19,10 @@ function Header() {
                 </Main>
                 <UserContainer>
                     <Name>
-                        Maich
+                        {user.name}
                     </Name>
                     <UserImage>
-                        <img src="https://i.imgur.com/6VBx3io.png" />
+                        <img src={user.photo ? user.photo : "https://i.imgur.com/6VBx3io.png"} />
                     </UserImage>
                 </UserContainer>
             </Container>
