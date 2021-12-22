@@ -52,7 +52,7 @@ function App() {
                                 {/* <Chats /> */}
                                 <Routes>
                                 
-                                    <Route path="/room/:channelId" element = {<Chats />} />
+                                    <Route path="/room/:channelId" element = {<Chats user={user}/>} />
                                     <Route path="/" element = {'peter'} />
                                    
                                 </Routes>
@@ -70,7 +70,7 @@ const Container = styled.div`
     width: 100%;
     height: 100vh;
     display: grid;
-    grid-template-rows: 38px auto;
+    grid-template-rows: 38px minmax(0, 1fr);
 
 `
 const Main =styled.div`

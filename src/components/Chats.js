@@ -5,20 +5,50 @@ import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
 import db from '../firebase';
 import { useParams } from 'react-router-dom';
+import firebase from 'firebase/compat';
 
-function Chats() {
+function Chats({user}) {
 
     let { channelId } = useParams();
     const[channel, setChannel] = useState()
+    const [messages, setMessages] = useState([]);
+
+    const getMessages = () => {
+        db.collection('rooms')
+        .doc(channelId)
+        .collection('messages')
+        .orderBy('timestamp', 'asc')
+        .onSnapshot((snapshot) => {
+            let messages = snapshot.docs.map((doc) =>doc.data());
+            console.log(messages);
+            setMessages(messages);
+        })
+    }
+
+    const sendMessage =(text) =>{
+
+        if(channel){
+            let payload ={
+                text: text,
+                timestamp: firebase.firestore.Timestamp.now(),
+                user: user.name,
+                userImage: user.photo,
+            }
+            db.collection('rooms').doc(channelId).collection('messages').add(payload);
+            console.log(payload);
+        }
+    }
+
     const getChannel = () =>{
         db.collection('rooms')
         .doc(channelId)
-        .onSnapshot((snapshot) =>{
+        .onSnapshot((snapshot) =>{ //snapshot is the data of that channel
             setChannel(snapshot.data());
         })
     }
     useEffect(()=>{
         getChannel();
+        getMessages();
     }, [channelId]);//will listen for changes in the channelId of the params and fire whatever is inside the useEffect function
 
     return (
@@ -26,7 +56,7 @@ function Chats() {
            <Header>
                 <Channel>
                     <ChannelName>
-                        #{channel.name}
+                         # {channel && channel.name}
                     </ChannelName>
                     <ChannelInfo>
                         Company-wide announcements and work-based matters
@@ -41,10 +71,22 @@ function Chats() {
                 </ChannelDetails>
            </Header>
            <MessageContainer>
-                <ChatMessage />
+               {
+                   messages.length > 0 &&
+                   messages.map((data, index)=>(
+                    <ChatMessage 
+                        text= {data.text}
+                        name = {data.user}
+                        image = {data.userImage}
+                        timestamp = {data.timestamp}
+                    />
+                   ))
+
+               }
+                
            </MessageContainer>
 
-           <ChatInput />
+           <ChatInput sendMessage={sendMessage}/>
         </Container>
     )
 }
@@ -74,6 +116,7 @@ const ChannelDetails = styled.div`
 const Container = styled.div`
     display: grid;
     grid-template-rows: 64px auto min-content;
+    min-height: 0;
 `
 const Header = styled.div`
     margin-top: -5px;
@@ -86,6 +129,9 @@ const Header = styled.div`
     
 `
 const MessageContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
 `
 
 
