@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import db from "./firebase";
+import {auth, provider} from './firebase';
 
 
 function App() {
@@ -21,6 +22,13 @@ function App() {
             }))
         })
     }
+
+    const signOut = () => {
+        auth.signOut().then(() => {
+            localStorage.removeItem('user');
+            setUser(null);
+        })
+    } 
 
     useEffect(() => {
         getChannels();
@@ -38,12 +46,15 @@ function App() {
                     :
                
                         <Container>
-                            <Header user={user}/>
+                            <Header signOut={signOut} user={user}/>
                             <Main>
                                 <Sidebar rooms={rooms}/>
+                                {/* <Chats /> */}
                                 <Routes>
-                                    <Route path='/rooms' element = {<Chats />} />
-                                    
+                                
+                                    <Route path="/room/:channelId" element = {<Chats />} />
+                                    <Route path="/" element = {'peter'} />
+                                   
                                 </Routes>
                             </Main>    
                         </Container>

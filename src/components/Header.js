@@ -4,7 +4,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { CenterFocusStrong } from '@material-ui/icons';
 
-function Header({ user }) {
+function Header({ user, signOut }) {
     return (
         <div>
             <Container>
@@ -21,7 +21,7 @@ function Header({ user }) {
                     <Name>
                         {user.name}
                     </Name>
-                    <UserImage>
+                    <UserImage onClick={signOut}>
                         <img src={user.photo ? user.photo : "https://i.imgur.com/6VBx3io.png"} />
                     </UserImage>
                 </UserContainer>
@@ -88,6 +88,7 @@ const UserImage = styled.div`
     height: 28px;
     border: 2px solid white;
     border-radius: 3px;
+    cursor: pointer;
 
     img{
         width: 100%;
